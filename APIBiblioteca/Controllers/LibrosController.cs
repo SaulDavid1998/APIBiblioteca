@@ -39,6 +39,19 @@ namespace APIBiblioteca.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Libro libro)
         {
+           var existeAutor= await context.Autor.Where(autor => autor.AutorId == libro.AutorFK).AnyAsync();
+
+            // Si el autor no existe, devolvemos un error de validación
+            //El error de validacion es el JSON que devuelve cuando el modelo no es valido
+            //Problem Detail es el estandar para devolver errores en APIs REST
+            if (existeAutor ==false)
+            {
+                ModelState.AddModelError("AutorFK","No existe el autor");
+                return ValidationProblem();
+            }
+
+            
+
             await context.Libro.AddAsync(libro);
             await context.SaveChangesAsync();
             return CreatedAtRoute("GetLibroPorId", new { id = libro.LibroId }, libro);

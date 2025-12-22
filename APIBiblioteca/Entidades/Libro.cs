@@ -10,6 +10,8 @@ namespace APIBiblioteca.Entidades
         [Key]
         public int LibroId { get; set; }
 
+
+        [Required(AllowEmptyStrings=true)]
         [StringLength(300)]
         public string Descripcion { get; set; } = string.Empty;
 
