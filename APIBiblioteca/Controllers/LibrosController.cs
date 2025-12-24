@@ -1,4 +1,5 @@
 ﻿using APIBiblioteca.Entidades;
+using APIBiblioteca.Entidades.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,20 +21,46 @@ namespace APIBiblioteca.Controllers
         public async Task<ActionResult> Get()
         {
 
-            List<Libro> lstLibros = await context.Libro.ToListAsync();
-            return Ok(lstLibros);
+            List<Libro> lstLibros = await context.Libro
+                                                .Include(registro=>registro.Autor)
+                                                .ToListAsync();
+            List<LibroDTO> lstLibroDTO = new List<LibroDTO>();
+
+            foreach(var registro in lstLibros)
+            {
+                LibroDTO libroDTO = new LibroDTO
+                {
+                    LibroId = registro.LibroId,
+                    Titulo = registro.Titulo,
+                    Descripcion = registro.Descripcion,
+                    Publicacion=registro.Publicacion,
+                    Autor = registro.Autor.Nombre + " " + registro.Autor.Apellido
+                };
+                lstLibroDTO.Add(libroDTO);
+            }
+
+            return Ok(lstLibroDTO);
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            var consulta = await context.Libro.Where(libro => libro.LibroId == id).FirstOrDefaultAsync();
+            var consulta = await context.Libro.Include(libro=>libro.Autor).Where(libro => libro.LibroId == id).FirstOrDefaultAsync();
             if (consulta == null)
             {
                 return NotFound();
             }
-            return Ok(consulta);
+
+            LibroDTO libroDTO = new LibroDTO
+            {
+                LibroId = consulta.LibroId,
+                Titulo = consulta.Titulo,
+                Descripcion = consulta.Descripcion,
+                Publicacion = consulta.Publicacion,
+                Autor = consulta.Autor.Nombre + " " + consulta.Autor.Apellido
+            };
+            return Ok(libroDTO);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
 ﻿using APIBiblioteca.Entidades;
+using APIBiblioteca.Entidades.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -20,8 +21,20 @@ namespace APIBiblioteca.Controllers
         {
             List<Autor> lstAutores = await context.Autor.ToListAsync();
 
+            List<AutorDTO> lstAutoresDTO = new List<AutorDTO>();
+            foreach (Autor autor in lstAutores)
+            {
+                AutorDTO autorDTO = new AutorDTO()
+                {
+                    AutorId = autor.AutorId,
+                    NombreCompleto = autor.Nombre + " " + autor.Apellido,
+                    Nacionalidad=autor.Nacionalidad
+                };
+                lstAutoresDTO.Add(autorDTO);
 
-            return Ok(lstAutores);
+            }
+
+            return Ok(lstAutoresDTO);
         }
 
         [HttpGet("{id}")]
@@ -32,7 +45,14 @@ namespace APIBiblioteca.Controllers
             {
                 return NotFound();
             }
-            return Ok(autor);
+
+            AutorDTO autorDTO = new AutorDTO
+            {
+                AutorId = autor.AutorId,
+                NombreCompleto = autor.Nombre + " " + autor.Apellido,
+                Nacionalidad=autor.Nacionalidad
+            };
+            return Ok(autorDTO);
         }
 
         [HttpPost]
