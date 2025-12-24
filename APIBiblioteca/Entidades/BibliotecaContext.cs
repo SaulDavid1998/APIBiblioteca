@@ -17,10 +17,10 @@ namespace APIBiblioteca.Entidades
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Autor>().HasData(
-                new Autor() { AutorId = 1, Nombre = "Gabriel García Márquez", Nacionalidad = "Colombiana", FechaNacimiento = new DateOnly(1927, 3, 6) },
-                new Autor() { AutorId = 2, Nombre = "Stephen King", Nacionalidad = "Estadounidense", FechaNacimiento = new DateOnly(1947, 9, 21) },
-                new Autor() { AutorId = 3, Nombre = "J.K. Rowling", Nacionalidad = "Britanica", FechaNacimiento = new DateOnly(1965, 7, 31) },
-                new Autor() { AutorId = 4, Nombre = "Tolkien", Nacionalidad = "Britanica", FechaNacimiento = new DateOnly(1892, 1, 3) }
+                new Autor() { AutorId = 1, Nombre = "Gabriel García",Apellido= "Márquez", Nacionalidad = "Colombiana", FechaNacimiento = new DateOnly(1927, 3, 6),Identificacion="123" },
+                new Autor() { AutorId = 2, Nombre = "Stephen",Apellido= "King", Nacionalidad = "Estadounidense", FechaNacimiento = new DateOnly(1947, 9, 21),Identificacion="456" },
+                new Autor() { AutorId = 3, Nombre = "J.K.",Apellido= "Rowling", Nacionalidad = "Britanica", FechaNacimiento = new DateOnly(1965, 7, 31),Identificacion="789" },
+                new Autor() { AutorId = 4, Nombre = "J.R.R.",Apellido= "Tolkien", Nacionalidad = "Britanica", FechaNacimiento = new DateOnly(1892, 1, 3),Identificacion="321" }
             );
 
             modelBuilder.Entity<Libro>().HasData(

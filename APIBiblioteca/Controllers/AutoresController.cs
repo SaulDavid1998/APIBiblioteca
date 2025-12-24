@@ -24,7 +24,7 @@ namespace APIBiblioteca.Controllers
             return Ok(lstAutores);
         }
 
-        [HttpGet("{id}", Name = "GetAutorPorId")]
+        [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
             Autor autor = await context.Autor.Where(a => a.AutorId == id).FirstOrDefaultAsync();
@@ -43,7 +43,7 @@ namespace APIBiblioteca.Controllers
             // y puede tardar o lanzar excepciones; Add solo marca la entidad en memoria y no requiere await.
             await context.SaveChangesAsync();
 
-            return CreatedAtRoute("GetAutorPorId", new { id = autor.AutorId }, autor);
+            return CreatedAtAction("Get", new { id = autor.AutorId }, autor);
 
         }
 

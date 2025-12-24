@@ -25,7 +25,7 @@ namespace APIBiblioteca.Controllers
         }
 
 
-        [HttpGet("{id}", Name = "GetLibroPorId")]
+        [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
             var consulta = await context.Libro.Where(libro => libro.LibroId == id).FirstOrDefaultAsync();
@@ -54,7 +54,7 @@ namespace APIBiblioteca.Controllers
 
             await context.Libro.AddAsync(libro);
             await context.SaveChangesAsync();
-            return CreatedAtRoute("GetLibroPorId", new { id = libro.LibroId }, libro);
+            return CreatedAtAction("Get", new { id = libro.LibroId }, libro);
         }
 
         [HttpPut("{id}")]
