@@ -64,9 +64,18 @@ namespace APIBiblioteca.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Libro libro)
+        public async Task<ActionResult> Post(LibroDTOPostPut libroDTOPostPut)
         {
-           var existeAutor= await context.Autor.Where(autor => autor.AutorId == libro.AutorFK).AnyAsync();
+
+            Libro libro = new Libro
+            {
+                Titulo = libroDTOPostPut.Titulo,
+                Descripcion = libroDTOPostPut.Descripcion,
+                Publicacion = libroDTOPostPut.Publicacion,
+                AutorFK = libroDTOPostPut.AutorFK
+            };
+            // Comprobamos si el autor existe en la base de datos
+            var existeAutor = await context.Autor.Where(autor => autor.AutorId == libro.AutorFK).AnyAsync();
 
             // Si el autor no existe, devolvemos un error de validación
             //El error de validacion es el JSON que devuelve cuando el modelo no es valido
@@ -81,17 +90,19 @@ namespace APIBiblioteca.Controllers
 
             await context.Libro.AddAsync(libro);
             await context.SaveChangesAsync();
-            return CreatedAtAction("Get", new { id = libro.LibroId }, libro);
+            return CreatedAtAction("Get", new { id = libro.LibroId }, libroDTOPostPut);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, Libro libro)
+        public async Task<ActionResult> Put(int id, Libro libroDTO)
         {
+            // Antes se validaba que el id de la URL coincidiera con el id enviado en el body.
+            // Como ahora usamos un DTO sin LibroId en el body, esta verificación ya no es necesaria.
 
-            if (id != libro.LibroId)
+            /*if (id != libro.LibroId)
             {
                 return BadRequest();
-            }
+            }*/
 
             bool encontrado = await context.Libro.Where(libro => libro.LibroId == id).AnyAsync();
 
@@ -99,6 +110,13 @@ namespace APIBiblioteca.Controllers
             {
                 return NotFound();
             }
+
+            var libro = await context.Libro.Where(l => l.LibroId == id).FirstOrDefaultAsync();
+            libro.Titulo = libroDTO.Titulo;
+            libro.Descripcion = libroDTO.Descripcion;
+            libro.Publicacion = libroDTO.Publicacion;
+            libro.AutorFK = libroDTO.AutorFK;
+
 
             context.Libro.Update(libro);
             await context.SaveChangesAsync();

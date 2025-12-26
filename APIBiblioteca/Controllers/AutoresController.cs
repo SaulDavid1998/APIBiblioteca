@@ -56,26 +56,39 @@ namespace APIBiblioteca.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Autor autor)
+        public async Task<ActionResult> Post(AutorDTOPostPut autorDTO)
         {
+            var autor = new Autor
+            {
+                Nombre = autorDTO.Nombre,
+                Apellido = autorDTO.Apellido,
+                Nacionalidad = autorDTO.Nacionalidad,
+                FechaNacimiento = autorDTO.FechaNacimiento,
+                Identificacion = autorDTO.Identificacion
+            };
             await context.Autor.AddAsync(autor);
             // await en SaveChangesAsync porque es la operación que realiza I/O (persistir en la base de datos)
             // y puede tardar o lanzar excepciones; Add solo marca la entidad en memoria y no requiere await.
             await context.SaveChangesAsync();
 
-            return CreatedAtAction("Get", new { id = autor.AutorId }, autor);
+
+            return CreatedAtAction("Get", new { id = autor.AutorId }, autorDTO);
 
         }
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id,Autor autor)
+        public async Task<ActionResult> Put(int id,AutorDTOPostPut autorDTO)
         {
 
-            if (id != autor.AutorId)
+            // Antes se validaba que el id de la URL coincidiera con el id enviado en el body.
+            // Como ahora usamos un DTO sin AutorId en el body, esta verificación ya no es necesaria.
+
+            /*if (id != autor.AutorId)
             {
                 return BadRequest();
-            }
+            }*/
+            
 
             bool encontrado = await context.Autor.Where(autor => autor.AutorId == id).AnyAsync();
 
@@ -84,7 +97,16 @@ namespace APIBiblioteca.Controllers
                 return NotFound();
             }
 
-             context.Autor.Update(autor);
+            var autor = await context.Autor.Where(a => a.AutorId == id).FirstOrDefaultAsync();
+
+            autor.Nombre = autorDTO.Nombre;
+            autor.Apellido = autorDTO.Apellido;
+            autor.Nacionalidad = autorDTO.Nacionalidad;
+            autor.FechaNacimiento = autorDTO.FechaNacimiento;
+            autor.Identificacion = autorDTO.Identificacion;
+
+
+            context.Autor.Update(autor);
             await context.SaveChangesAsync();
 
             return Ok();
