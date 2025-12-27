@@ -12,6 +12,8 @@ namespace APIBiblioteca.Entidades
 
         public DbSet<Libro> Libro { get; set; } = null!;
 
+        public DbSet<Comentario> Comentario { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -33,6 +35,12 @@ namespace APIBiblioteca.Entidades
                 new Libro() { LibroId = 7, Titulo = "Crónica de una Muerte Anunciada",Publicacion=1981,AutorFK=1, Descripcion = "" },
                 new Libro() { LibroId = 8, Titulo = "Harry Potter y las Reliquias de la Muerte",Publicacion=2007,AutorFK=3, Descripcion = "" }
 
+            );
+
+            modelBuilder.Entity<Comentario>().HasData(
+                new Comentario() { ComentarioId = new Guid("521d2529-a2d5-470e-a74c-95e0f4281b46"), Texto = "Excelente libro, muy recomendable.", FechaPublicacion = new DateTime(2025, 12, 26), LibroFK = 1 },
+                new Comentario() { ComentarioId = new Guid("535303b3-a3d0-4495-a7ad-bce547c20b5d"), Texto = "No me gustó mucho la trama.", FechaPublicacion = new DateTime(2025, 12, 26), LibroFK = 2 },
+                new Comentario() { ComentarioId = new Guid("7995aed4-5a27-4bac-a80f-f09fb959c4c9"), Texto = "Una lectura fascinante para todas las edades.", FechaPublicacion = new DateTime(2025, 12, 26), LibroFK = 3 }
             );
         }
     }

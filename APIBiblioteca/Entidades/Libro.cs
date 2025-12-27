@@ -28,5 +28,7 @@ namespace APIBiblioteca.Entidades
         [ValidateNever]
         [ForeignKey("AutorFK")]
         public Autor Autor { get; set; } = null!;
+
+
     }
 }
