@@ -11,7 +11,7 @@ namespace APIBiblioteca.Controllers
     public class ComentariosController : ControllerBase
     {
         private BibliotecaContext _context;
-        public  ComentariosController(BibliotecaContext context)
+        public ComentariosController(BibliotecaContext context)
         {
 
             _context = context;
@@ -34,7 +34,7 @@ namespace APIBiblioteca.Controllers
             var lstcomentariosDTO = new List<ComentarioDTO>();
             foreach (var registro in comentarios)
             {
-                ComentarioDTO dto=new ComentarioDTO
+                ComentarioDTO dto = new ComentarioDTO
                 {
                     ComentarioId = registro.ComentarioId,
                     Texto = registro.Texto,
@@ -45,9 +45,9 @@ namespace APIBiblioteca.Controllers
 
                 lstcomentariosDTO.Add(dto);
             }
-            
 
-            if (comentarios.Count==0)
+
+            if (comentarios.Count == 0)
             {
                 return NotFound();
             }
@@ -79,6 +79,26 @@ namespace APIBiblioteca.Controllers
                 Libro = comentario.Libro.Titulo
             };
             return Ok(comentarioDTO);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post(int libroid, ComentarioDTOPostPut comentarioDTO)
+        {
+            var libro = await _context.Libro.Where(libro => libro.LibroId == libroid).FirstOrDefaultAsync();
+            if (libro == null)
+            {
+                return NotFound();
+            }
+            Comentario comentario = new Comentario
+            {
+                Texto = comentarioDTO.Texto,
+                FechaPublicacion = DateTime.Today,
+                LibroFK = libroid
+            };
+
+            await _context.Comentario.AddAsync(comentario);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("Get", new { libroid = libroid, id = comentario.ComentarioId }, comentarioDTO);
         }
     }
 }
