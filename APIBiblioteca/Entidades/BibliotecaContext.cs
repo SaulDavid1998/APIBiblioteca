@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIBiblioteca.Entidades
 {
-    public class BibliotecaContext : DbContext
+    public class BibliotecaContext : IdentityDbContext
     {
         public BibliotecaContext(DbContextOptions options) : base(options)
         {
