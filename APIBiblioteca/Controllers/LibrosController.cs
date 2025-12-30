@@ -1,5 +1,6 @@
 ﻿using APIBiblioteca.Entidades;
 using APIBiblioteca.Entidades.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,6 +65,7 @@ namespace APIBiblioteca.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Post(LibroDTOPostPut libroDTOPostPut)
         {
 
@@ -94,6 +96,7 @@ namespace APIBiblioteca.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> Put(int id, Libro libroDTO)
         {
             // Antes se validaba que el id de la URL coincidiera con el id enviado en el body.

@@ -1,5 +1,6 @@
 ﻿using APIBiblioteca.Entidades;
 using APIBiblioteca.Entidades.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -56,6 +57,7 @@ namespace APIBiblioteca.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Post(AutorDTOPostPut autorDTO)
         {
             var autor = new Autor
@@ -78,6 +80,7 @@ namespace APIBiblioteca.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> Put(int id,AutorDTOPostPut autorDTO)
         {
 
@@ -115,6 +118,7 @@ namespace APIBiblioteca.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             Autor autor = await context.Autor.Where(autor => autor.AutorId == id).FirstOrDefaultAsync();
