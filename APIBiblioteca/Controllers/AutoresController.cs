@@ -9,7 +9,7 @@ namespace APIBiblioteca.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AutoresController : Controller
+    public class AutoresController : ControllerBase
     {
         private BibliotecaContext context;
 

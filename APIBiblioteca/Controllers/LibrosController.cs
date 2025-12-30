@@ -2,13 +2,14 @@
 using APIBiblioteca.Entidades.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIBiblioteca.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LibrosController : Controller
+    public class LibrosController : ControllerBase
     {
 
         private BibliotecaContext context;
@@ -97,7 +98,7 @@ namespace APIBiblioteca.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult> Put(int id, Libro libroDTO)
+        public async Task<ActionResult> Put(int id, LibroDTOPostPut libroDTO)
         {
             // Antes se validaba que el id de la URL coincidiera con el id enviado en el body.
             // Como ahora usamos un DTO sin LibroId en el body, esta verificación ya no es necesaria.
@@ -107,14 +108,22 @@ namespace APIBiblioteca.Controllers
                 return BadRequest();
             }*/
 
-            bool encontrado = await context.Libro.Where(libro => libro.LibroId == id).AnyAsync();
+            var encontrado = await context.Libro.Where(libro => libro.LibroId == id).AnyAsync();
 
             if (encontrado == false)
             {
                 return NotFound();
             }
 
-            var libro = await context.Libro.Where(l => l.LibroId == id).FirstOrDefaultAsync();
+            var autorExiste = await context.Autor.Where(autor => autor.AutorId == libroDTO.AutorFK).AnyAsync();
+            if (autorExiste==false) 
+            {
+                ModelState.AddModelError("AutorFK", "El autor no existe");
+                return ValidationProblem();
+            }
+
+            var libro = await context.Libro.Where(l => l.LibroId == id)
+                                            .FirstOrDefaultAsync();
             libro.Titulo = libroDTO.Titulo;
             libro.Descripcion = libroDTO.Descripcion;
             libro.Publicacion = libroDTO.Publicacion;
@@ -127,6 +136,20 @@ namespace APIBiblioteca.Controllers
             // Nota: se devuelve BadRequest cuando el id de la ruta no coincide con el id en el cuerpo,
             // porque indica una petición inválida/contradictoria. NotFound se usa cuando el recurso indicado
             // por la ruta no existe en el servidor.
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var libro = await context.Libro.Where(l => l.LibroId == id).FirstOrDefaultAsync();
+            if (libro == null)
+            {
+                return NotFound();
+            }
+            context.Libro.Remove(libro);
+            await context.SaveChangesAsync();
             return Ok();
         }
     }

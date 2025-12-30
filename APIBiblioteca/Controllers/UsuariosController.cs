@@ -51,7 +51,7 @@ namespace APIBiblioteca.Controllers
             }
         }
 
-
+        [HttpPost]
         public async Task<RespuestaAutenticacionDTO> ConstruirToken(CredencialesUsuarioDTO credencialesUsuarioDTO)
         {
             var claims = new List<Claim>
