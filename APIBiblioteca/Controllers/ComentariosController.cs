@@ -83,6 +83,7 @@ namespace APIBiblioteca.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Post(int libroid, ComentarioDTOPostPut comentarioDTO)
         {
             var libro = await _context.Libro.Where(libro => libro.LibroId == libroid).FirstOrDefaultAsync();

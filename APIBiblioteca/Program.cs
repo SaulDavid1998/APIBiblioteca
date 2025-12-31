@@ -1,8 +1,10 @@
 using APIBiblioteca.Entidades;
+using APIBiblioteca.Swagger;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 
@@ -13,8 +15,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
+/*builder.Services.AddOpenApi();*/
+
+//Configuracion autenticacion en swagger
+builder.Services.AddSwaggerGen(opciones =>
+{
+    opciones.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header
+    });
+    opciones.OperationFilter<FiltroAutorizacion>();
+});
+//fin autenticacion en swagger
 
 builder.Services.AddDbContext<BibliotecaContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("conexion")));
@@ -56,10 +72,10 @@ app.UseSwaggerUI();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-}
+}*/
 
 app.UseHttpsRedirection();
 
