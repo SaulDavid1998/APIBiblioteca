@@ -32,13 +32,18 @@ Cada entidad cuenta con endpoints REST para:
 Los endpoints `POST` y `PUT` están protegidos y requieren autenticación mediante **JWT (JSON Web Token)**.  
 
 1. **Registro de usuario o Inicio de sesión**
-2. **Uso del token generado como respuesta** 
+2. **Uso del token generado como respuesta**:
+
+   - Hacer click en **Authorize**
+   - Escribir Bearer, seguido de un espacio, y pegar el token
 
 <img width="1329" height="227" alt="Captura de pantalla 2026-01-01 074148" src="https://github.com/user-attachments/assets/c248bd13-33d1-4d2b-b7e6-07ccb18aeb34" />
 
-<img width="1323" height="345" alt="Captura de pantalla 2026-01-01 074234" src="https://github.com/user-attachments/assets/39f5a460-aa9a-4110-908a-7fd94ab63bb4" />
+<img width="1326" height="439" alt="Captura de pantalla 2026-01-02 063605" src="https://github.com/user-attachments/assets/8ccd3bf1-988a-4fe9-9fef-fe85360a01c3" />
 
 **Nota:** el endpoint Api/Usuarios no se usa, el de Api/Usuarios/registro o Api/Usuarios/login son con los que hay que hacer la peticion para obtener el token
+
+---
 
 ### Nota sobre la base de datos
 
